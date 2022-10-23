@@ -1,8 +1,0 @@
-/home/codebind/Desktop/src/university/Term Paper/Face_Expression_Recognition-master/testing/bin/dlib-19.17.0/dlib-19.17.0/build/temp.linux-x86_64-3.10/CMakeFiles/dlib_python.dir
-/home/codebind/Desktop/src/university/Term Paper/Face_Expression_Recognition-master/testing/bin/dlib-19.17.0/dlib-19.17.0/build/temp.linux-x86_64-3.10/CMakeFiles/edit_cache.dir
-/home/codebind/Desktop/src/university/Term Paper/Face_Expression_Recognition-master/testing/bin/dlib-19.17.0/dlib-19.17.0/build/temp.linux-x86_64-3.10/CMakeFiles/rebuild_cache.dir
-/home/codebind/Desktop/src/university/Term Paper/Face_Expression_Recognition-master/testing/bin/dlib-19.17.0/dlib-19.17.0/build/temp.linux-x86_64-3.10/pybind11_build/CMakeFiles/edit_cache.dir
-/home/codebind/Desktop/src/university/Term Paper/Face_Expression_Recognition-master/testing/bin/dlib-19.17.0/dlib-19.17.0/build/temp.linux-x86_64-3.10/pybind11_build/CMakeFiles/rebuild_cache.dir
-/home/codebind/Desktop/src/university/Term Paper/Face_Expression_Recognition-master/testing/bin/dlib-19.17.0/dlib-19.17.0/build/temp.linux-x86_64-3.10/dlib_build/CMakeFiles/dlib.dir
-/home/codebind/Desktop/src/university/Term Paper/Face_Expression_Recognition-master/testing/bin/dlib-19.17.0/dlib-19.17.0/build/temp.linux-x86_64-3.10/dlib_build/CMakeFiles/edit_cache.dir
-/home/codebind/Desktop/src/university/Term Paper/Face_Expression_Recognition-master/testing/bin/dlib-19.17.0/dlib-19.17.0/build/temp.linux-x86_64-3.10/dlib_build/CMakeFiles/rebuild_cache.dir
