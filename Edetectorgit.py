@@ -1,8 +1,6 @@
 import cv2
 from fer import FER
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-# input_image = cv2.imread("Ava.png")
+
 emotion_detector = FER(mtcnn=True)
 
 def emotion_detection(file_id, file_extension):
