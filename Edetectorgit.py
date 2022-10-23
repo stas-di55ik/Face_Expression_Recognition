@@ -2,10 +2,11 @@ import cv2
 from fer import FER
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-input_image = cv2.imread("Ava.png")
+# input_image = cv2.imread("Ava.png")
 emotion_detector = FER(mtcnn=True)
 
-def emotion_detection(input_image):
+def emotion_detection(file_id, file_extension):
+    input_image = cv2.imread(file_id + file_extension)
     result = emotion_detector.detect_emotions(input_image)
 
     bounding_box = result[0]["box"]
@@ -25,15 +26,9 @@ def emotion_detection(input_image):
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1, cv2.LINE_AA, )
 
     # Save the result in new image file
-    cv2.imwrite("emotion.jpg", input_image)
+    lastname = 'zEmotion'+file_id + file_extension
+    cv2.imwrite(lastname, input_image)
 
-    # Read image file using matplotlib's image module
-    result_image = mpimg.imread('emotion.jpg')
-    imgplot = plt.imshow(result_image)
-    # Display Output Image
-    plt.axis('off')
-    plt.show()
-
-emotion_detection(input_image)
+    return lastname
 
 
