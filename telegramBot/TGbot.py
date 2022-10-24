@@ -20,10 +20,11 @@ def handle_photo(message):
         new_file.write(downloaded_file)
 
     photo_summary = Edetectorgit.emotion_detection(file_id, file_extension)
-    file = open(photo_summary, 'rb')
+    bot.send_message(message.chat.id, photo_summary)
+    file = open('zEmotion'+file_id + file_extension, 'rb')
     bot.send_document(message.chat.id, file)
     os.remove(file_id + file_extension)
-    os.remove(photo_summary)
+    os.remove('zEmotion'+file_id + file_extension)
 
 
 bot.polling()
