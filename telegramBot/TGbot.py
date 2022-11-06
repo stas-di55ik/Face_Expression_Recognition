@@ -31,11 +31,15 @@ def handle_photo(message):
         new_file.write(downloaded_file)
 
     photo_summary = Edetectorgit.emotion_detection(file_id, file_extension)
-    bot.send_message(message.chat.id, "🌟 Підсумок аналізу фото 🫡\n" + photo_summary)
-    file = open('zEmotion'+file_id + file_extension, 'rb')
-    bot.send_document(message.chat.id, file)
-    os.remove(file_id + file_extension)
-    os.remove('zEmotion'+file_id + file_extension)
+    if photo_summary == 'Error':
+        bot.send_message(message.chat.id, "Вибачте за незручності, дане фото не підлягає аналізу🥲")
+
+    else:
+        bot.send_message(message.chat.id, "🌟 Підсумок аналізу фото 🫡\n" + photo_summary)
+        file = open('zEmotion'+file_id + file_extension, 'rb')
+        bot.send_photo(message.chat.id, file)
+        os.remove(file_id + file_extension)
+        os.remove('zEmotion'+file_id + file_extension)
 
 
 @bot.message_handler(content_types=["document", "audio", "sticker", "video", "location", "contact"])
