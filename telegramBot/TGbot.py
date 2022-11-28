@@ -1,7 +1,12 @@
+import time
+
 import telebot
 import Edetectorgit
-import config
 import os
+
+import config
+import InstaPart
+
 
 bot = telebot.TeleBot(config.token)
 
@@ -12,7 +17,7 @@ def start_message(message):
 
 
 @bot.message_handler(commands=['help'])
-def start_message(message):
+def help_message(message):
     bot.send_message(message.chat.id, "Привiт ✌️ Я, бот🦾🤖, що був створений для розпізнавання емоцій на фото\n"
                                       "✍️Вимоги до використання:\n✅ Надсилайте лише стиснені фото\n"
                                       "✅ Надсилайте фото, на якому є лише одне обличчя, інакше емоції будуть розпізнені"
@@ -36,10 +41,10 @@ def handle_photo(message):
 
     else:
         bot.send_message(message.chat.id, "🌟 Підсумок аналізу фото 🫡\n" + photo_summary)
-        file = open('zEmotion'+file_id + file_extension, 'rb')
+        file = open('zEmotion' + file_id + file_extension, 'rb')
         bot.send_photo(message.chat.id, file)
         os.remove(file_id + file_extension)
-        os.remove('zEmotion'+file_id + file_extension)
+        os.remove('zEmotion' + file_id + file_extension)
 
 
 @bot.message_handler(content_types=["document", "audio", "sticker", "video", "location", "contact"])
@@ -48,8 +53,23 @@ def handle_doc(message):
 
 
 @bot.message_handler(content_types=["text"])
-def handle_doc(message):
-    bot.send_message(message.chat.id, "Надішліть, будь ласка, фото для аналізу😊")
+def handle_text(message):
+    if 'https://www.instagram.com' in message.text:
+        bot.send_message(message.chat.id, "🔍 Знаходимо фото...")
+        file_name = InstaPart.load_inst_img_by_link(message)
+        bot.send_message(message.chat.id, "⚙️Триває розпізнавання...")
+        photo_summary = Edetectorgit.emotion_detection(file_name[0], file_name[1])
+        if photo_summary == 'Error' or file_name == 'Error':
+            bot.send_message(message.chat.id, "Вибачте за незручності, дане фото (чи посилання) не підлягає аналізу🥲")
+
+        else:
+            bot.send_message(message.chat.id, "🌟 Підсумок аналізу фото 🫡\n" + photo_summary)
+            file = open('zEmotion' + file_name[0] + file_name[1], 'rb')
+            bot.send_photo(message.chat.id, file)
+            os.remove(file_name[0] + file_name[1])
+            os.remove('zEmotion' + file_name[0] + file_name[1])
+    else:
+        bot.send_message(message.chat.id, "Надішліть, будь ласка, фото для аналізу😊")
 
 
 bot.polling()

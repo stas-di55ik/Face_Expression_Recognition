@@ -4,8 +4,8 @@ from fer import FER
 emotion_detector = FER(mtcnn=True)
 
 def emotion_detection(file_id, file_extension):
-    summary = ''
     try:
+        summary = ''
         input_image = cv2.imread(file_id + file_extension)
         result = emotion_detector.detect_emotions(input_image)
 
@@ -28,7 +28,5 @@ def emotion_detection(file_id, file_extension):
         cv2.imwrite('zEmotion'+file_id + file_extension, input_image)
         return summary
 
-
     except:
-        summary = 'Error'
-        return summary
+        return 'Error'
