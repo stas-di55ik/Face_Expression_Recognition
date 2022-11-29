@@ -23,7 +23,7 @@ def help_message(message):
 
 @bot.message_handler(content_types=["photo"])
 def handle_photo(message):
-    bot.send_message(message.chat.id, messages.photo_handling_answer)
+    bot.send_message(message.chat.id, messages.photo_handling_status)
     file_id = message.photo[-1].file_id
     file_info = bot.get_file(file_id)
     filename, file_extension = os.path.splitext(file_info.file_path)
@@ -33,15 +33,15 @@ def handle_photo(message):
         new_file.write(downloaded_file)
 
     photo_summary = emotionDetection.emotion_detection(file_id, file_extension)
-    if photo_summary == 'Error':
+    if photo_summary == markers.Error:
         bot.send_message(message.chat.id, messages.detection_error_answer)
 
     else:
         bot.send_message(message.chat.id, messages.detection_summary_title + photo_summary)
-        file = open(file_id + file_extension, 'rb')
+        file = open(markers.Detected_emotions_tag + file_id + file_extension, 'rb')
         bot.send_photo(message.chat.id, file)
         os.remove(file_id + file_extension)
-        os.remove(file_id + file_extension)
+        os.remove(markers.Detected_emotions_tag + file_id + file_extension)
 
 
 @bot.message_handler(content_types=["document", "audio", "sticker", "video", "location", "contact"])
@@ -64,7 +64,7 @@ def handle_text(message):
             file = open(file_name[0] + file_name[1], 'rb')
             bot.send_photo(message.chat.id, file)
             os.remove(file_name[0] + file_name[1])
-            os.remove(file_name[0] + file_name[1])
+            os.remove(markers.Detected_emotions_tag + file_name[0] + file_name[1])
     else:
         bot.send_message(message.chat.id, messages.text_handling_answer)
 

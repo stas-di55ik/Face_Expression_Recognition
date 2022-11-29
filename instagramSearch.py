@@ -40,4 +40,4 @@ def load_instagram_image(link):
         return markers.Error
 
 
-load_instagram_image(markers.Instagram_link_example)
+# load_instagram_image(markers.Instagram_link_example)

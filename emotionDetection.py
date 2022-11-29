@@ -31,7 +31,7 @@ def emotion_detection(file_id, file_extension):
                         (bounding_box[0], bounding_box[1] + bounding_box[3] + 30 + index * 15),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1, cv2.LINE_AA, )
 
-        cv2.imwrite('zEmotion'+file_id + file_extension, input_image)
+        cv2.imwrite(markers.Detected_emotions_tag + file_id + file_extension, input_image)
         return summary
 
     except:
