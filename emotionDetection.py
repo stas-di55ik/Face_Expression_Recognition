@@ -1,7 +1,13 @@
 import cv2
 from fer import FER
+import os
 
+import markers
+
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 emotion_detector = FER(mtcnn=True)
+
 
 def emotion_detection(file_id, file_extension):
     try:
@@ -29,4 +35,4 @@ def emotion_detection(file_id, file_extension):
         return summary
 
     except:
-        return 'Error'
+        return markers.Error
