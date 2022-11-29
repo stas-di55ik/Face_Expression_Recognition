@@ -1,3 +1,5 @@
+import time
+
 import telebot
 import emotionDetection
 import os
@@ -35,6 +37,7 @@ def handle_photo(message):
     photo_summary = emotionDetection.emotion_detection(file_id, file_extension)
     if photo_summary == markers.Error:
         bot.send_message(message.chat.id, messages.detection_error_answer)
+        os.remove(file_id + file_extension)
 
     else:
         bot.send_message(message.chat.id, messages.detection_summary_title + photo_summary)
@@ -53,7 +56,7 @@ def handle_doc(message):
 def handle_text(message):
     if markers.Instagram_link in message.text:
         bot.send_message(message.chat.id, messages.photo_searching_status)
-        file_name = instagramSearch.load_instagram_image(message)
+        file_name = instagramSearch.load_instagram_image(message.text)
         bot.send_message(message.chat.id, messages.photo_handling_status)
         photo_summary = emotionDetection.emotion_detection(file_name[0], file_name[1])
         if photo_summary == markers.Error or file_name == markers.Error:
@@ -61,7 +64,7 @@ def handle_text(message):
 
         else:
             bot.send_message(message.chat.id, messages.detection_summary_title + photo_summary)
-            file = open(file_name[0] + file_name[1], 'rb')
+            file = open(markers.Detected_emotions_tag + file_name[0] + file_name[1], 'rb')
             bot.send_photo(message.chat.id, file)
             os.remove(file_name[0] + file_name[1])
             os.remove(markers.Detected_emotions_tag + file_name[0] + file_name[1])
