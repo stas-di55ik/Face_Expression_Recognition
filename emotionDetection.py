@@ -4,35 +4,72 @@ import os
 
 import markers
 
-
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 emotion_detector = FER(mtcnn=True)
 
 
-def emotion_detection(file_id, file_extension):
+class RecognizedPhoto:
+    def __init__(self, f, s):
+        self.file_name = f
+        self.summary = s
+
+
+def find_crop_faces(file_id, file_extension):
+    input_image = cv2.imread(file_id + file_extension)
+    gray_image = cv2.cvtColor(input_image, cv2.COLOR_BGR2GRAY)
+    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    faces = face_cascade.detectMultiScale(
+        gray_image,
+        scaleFactor=1.1,
+        minNeighbors=5,
+        minSize=(30, 30),
+        flags=cv2.CASCADE_SCALE_IMAGE
+    )
+    output_images = []
+
+    for (x, y, w, h) in faces:
+        x1 = int(x - 0.13 * w)
+        y1 = int(y - 0.13 * h)
+        x2 = int(x + 1.13 * w)
+        y2 = int(y + 1.13 * h)
+        current_face = input_image[y1:y2, x1:x2]
+        output_filename = str(x+y) + file_id + file_extension
+        output_images.append(output_filename)
+        cv2.imwrite(output_filename, current_face)
+
+    return output_images
+
+
+def detect_emotions(file_id, file_extension):
     try:
-        summary = ''
-        input_image = cv2.imread(file_id + file_extension)
-        result = emotion_detector.detect_emotions(input_image)
+        all_input_images = find_crop_faces(file_id, file_extension)
+        recognized_photos = []
+        for img in all_input_images:
+            summary = ''
+            input_image = cv2.imread(img)
+            result = emotion_detector.detect_emotions(input_image)
 
-        bounding_box = result[0]["box"]
-        emotions = result[0]["emotions"]
-        cv2.rectangle(input_image, (
-        bounding_box[0], bounding_box[1]), (
-            bounding_box[0] + bounding_box[2], bounding_box[1] + bounding_box[3]),
-                      (0, 155, 255), 2,)
+            bounding_box = result[0]["box"]
+            emotions = result[0]["emotions"]
+            cv2.rectangle(input_image, (bounding_box[0], bounding_box[1]), (
+                bounding_box[0] + bounding_box[2], bounding_box[1] + bounding_box[3]),
+                          (0, 155, 255), 2,)
 
-        emotion_name, score = emotion_detector.top_emotion(input_image)
-        for index, (emotion_name, score) in enumerate(emotions.items()):
-            color = (211, 211, 211) if score < 0.01 else (255, 0, 0)
-            emotion_score = "{}: {}".format(emotion_name, "{:.2f}".format(score))
-            summary += emotion_score + '\n'
-            cv2.putText(input_image, emotion_score,
-                        (bounding_box[0], bounding_box[1] + bounding_box[3] + 30 + index * 15),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1, cv2.LINE_AA, )
+            emotion_name, score = emotion_detector.top_emotion(input_image)
+            for index, (emotion_name, score) in enumerate(emotions.items()):
+                color = (211, 211, 211) if score < 0.01 else (255, 0, 0)
+                emotion_score = "{}: {}".format(emotion_name, "{:.2f}".format(score))
+                summary += emotion_score + '\n'
+                cv2.putText(input_image, emotion_score,
+                            (bounding_box[0], bounding_box[1] + bounding_box[3] + 30 + index * 15),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1, cv2.LINE_AA, )
+            new_filename = markers.Detected_emotions_tag + img
+            cv2.imwrite(new_filename, input_image)
+            recognized_photo = RecognizedPhoto(new_filename, summary)
+            recognized_photos.append(recognized_photo)
+            os.remove(img)
 
-        cv2.imwrite(markers.Detected_emotions_tag + file_id + file_extension, input_image)
-        return summary
+        return recognized_photos
 
     except:
         return markers.Error

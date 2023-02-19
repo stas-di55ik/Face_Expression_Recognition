@@ -1,16 +1,16 @@
 import time
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-import config
 
+import config
 import markers
 
 
 def load_instagram_image(link):
     try:
         driver = webdriver.Chrome()
-        # driver.get('https://www.instagram.com/p/ClCUTF1pKzJ/?igshid=Zjc2ZTc4Nzk=')
         driver.get(link)
         time.sleep(10)
         _login = driver.find_element(By.NAME, "username")
@@ -32,11 +32,9 @@ def load_instagram_image(link):
         file_extension = markers.Instagram_screenshot_extension
         file_full_name = file_name + file_extension
         driver.save_screenshot(file_full_name)
+        driver.close()
         driver.quit()
         return [file_name, file_extension]
 
     except:
         return markers.Error
-
-
-# load_instagram_image(markers.Instagram_link_example)
