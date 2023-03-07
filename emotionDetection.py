@@ -22,7 +22,7 @@ def find_crop_faces(file_id, file_extension):
     face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     faces = face_cascade.detectMultiScale(
         gray_image,
-        scaleFactor=1.2,
+        scaleFactor=1.25,
         minNeighbors=5,
         minSize=(30, 30),
         flags=cv2.CASCADE_SCALE_IMAGE
