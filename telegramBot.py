@@ -1,4 +1,4 @@
-import time
+from datetime import datetime
 
 import telebot
 import emotionDetection
@@ -9,6 +9,9 @@ import messages
 import config
 import instagramSearch
 
+ig_username = ''
+ig_start_period = ''
+ig_finish_period = ''
 
 bot = telebot.TeleBot(config.telegram_bot_token)
 
@@ -22,9 +25,51 @@ def start_message(message):
 def help_message(message):
     bot.send_message(message.chat.id, messages.help_answer)
 
-@bot.message_handler(commands=['analyzeInstagramSpecificPeriod'])
+@bot.message_handler(commands=['analyze_ig_specific_period'])
 def analyze_ig_specific_period_message(message):
-    bot.send_message(message.chat.id, 'Введіть назву профілю кристувача')
+    bot.send_message(message.chat.id, messages.enter_ig_usernsme)
+    bot.register_next_step_handler(message, reg_ig_username)
+
+
+def reg_ig_username(message):
+    global ig_username
+    ig_username = message.text
+    bot.send_message(message.chat.id, messages.enter_ig_start_date)
+    bot.register_next_step_handler(message, reg_ig_start_period)
+
+
+def reg_ig_start_period(message):
+    global ig_start_period
+    ig_start_period = message.text
+    bot.send_message(message.chat.id, messages.enter_ig_finish_date)
+    bot.register_next_step_handler(message, reg_ig_finish_period)
+
+
+def reg_ig_finish_period(message):
+    global ig_username, ig_start_period, ig_finish_period
+    ig_finish_period = message.text
+
+    handled_start_date = handle_date(ig_start_period)
+    handled_finish_date = handle_date(ig_finish_period)
+    if handled_start_date == False or handled_finish_date == False:
+        bot.send_message(message.chat.id, messages.handling_date_error)
+
+    else:
+        instagramSearch.analyze_ig_specific_period(ig_username, ig_start_period, ig_finish_period)
+
+
+
+def handle_date(input_date):
+    try:
+        splited_date = input_date.split(".")
+        day = int(splited_date[0])
+        month = int(splited_date[1])
+        year = int(splited_date[2])
+        return datetime(year, month, day)
+
+    except:
+        return False
+
 
 @bot.message_handler(content_types=["photo"])
 def handle_photo(message):
