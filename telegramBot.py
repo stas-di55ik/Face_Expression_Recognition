@@ -8,6 +8,7 @@ import markers
 import messages
 import config
 import instagramSearch
+import sentimentAnalyzer
 
 ig_username = ''
 ig_publications_number = ''
@@ -89,6 +90,22 @@ def reg_specific_publication_number(message):
         instagramSearch.download_specific_publication(ig_username, ig_publications_number)
     except:
         bot.send_message(message.chat.id, messages.handling_ig_req_error1)
+
+
+@bot.message_handler(commands=['sentiment_analysis'])
+def analyze_text(message):
+    bot.send_message(message.chat.id, messages.enter_sentiment_analysis_source)
+    bot.register_next_step_handler(message, reg_sentiment_analyze_source)
+
+
+def reg_sentiment_analyze_source(message):
+    sentiment_analyze_source = message.text
+    try:
+        translated_source = sentimentAnalyzer.auto_translate_to_en(sentiment_analyze_source)
+        score = sentimentAnalyzer.get_sentiment_analysis(translated_source)
+        bot.send_message(message.chat.id, score)
+    except:
+        bot.send_message(message.chat.id, messages.sentiment_analysis_error)
 
 
 @bot.message_handler(content_types=["photo"])
