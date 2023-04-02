@@ -10,8 +10,7 @@ import config
 import instagramSearch
 
 ig_username = ''
-ig_start_period = ''
-ig_finish_period = ''
+ig_publications_number = ''
 
 bot = telebot.TeleBot(config.telegram_bot_token)
 
@@ -25,50 +24,71 @@ def start_message(message):
 def help_message(message):
     bot.send_message(message.chat.id, messages.help_answer)
 
-@bot.message_handler(commands=['analyze_ig_specific_period'])
-def analyze_ig_specific_period_message(message):
-    bot.send_message(message.chat.id, messages.enter_ig_usernsme)
-    bot.register_next_step_handler(message, reg_ig_username)
+
+@bot.message_handler(commands=['analyze_last_x_ig_publications'])
+def analyze_last_x_ig_publications(message):
+    bot.send_message(message.chat.id, messages.enter_ig_username)
+    bot.register_next_step_handler(message, reg_ig_username1)
 
 
-def reg_ig_username(message):
+def reg_ig_username1(message):
     global ig_username
     ig_username = message.text
-    bot.send_message(message.chat.id, messages.enter_ig_start_date)
-    bot.register_next_step_handler(message, reg_ig_start_period)
+    bot.send_message(message.chat.id, messages.enter_ig_last_x)
+    bot.register_next_step_handler(message, reg_last_publications_number)
 
 
-def reg_ig_start_period(message):
-    global ig_start_period
-    ig_start_period = message.text
-    bot.send_message(message.chat.id, messages.enter_ig_finish_date)
-    bot.register_next_step_handler(message, reg_ig_finish_period)
-
-
-def reg_ig_finish_period(message):
-    global ig_username, ig_start_period, ig_finish_period
-    ig_finish_period = message.text
-
-    handled_start_date = handle_date(ig_start_period)
-    handled_finish_date = handle_date(ig_finish_period)
-    if handled_start_date == False or handled_finish_date == False:
-        bot.send_message(message.chat.id, messages.handling_date_error)
-
-    else:
-        instagramSearch.analyze_ig_specific_period(ig_username, ig_start_period, ig_finish_period)
-
-
-
-def handle_date(input_date):
+def reg_last_publications_number(message):
+    global ig_username, ig_publications_number
     try:
-        splited_date = input_date.split(".")
-        day = int(splited_date[0])
-        month = int(splited_date[1])
-        year = int(splited_date[2])
-        return datetime(year, month, day)
-
+        ig_publications_number = int(message.text)
+        instagramSearch.download_last_x_publications(ig_username, ig_publications_number)
     except:
-        return False
+        bot.send_message(message.chat.id, messages.handling_ig_req_error1)
+
+
+@bot.message_handler(commands=['analyze_top_x_ig_publications'])
+def analyze_top_x_ig_publications(message):
+    bot.send_message(message.chat.id, messages.enter_ig_username)
+    bot.register_next_step_handler(message, reg_ig_username2)
+
+
+def reg_ig_username2(message):
+    global ig_username
+    ig_username = message.text
+    bot.send_message(message.chat.id, messages.enter_ig_top_x)
+    bot.register_next_step_handler(message, reg_top_publications_number)
+
+
+def reg_top_publications_number(message):
+    global ig_username, ig_publications_number
+    try:
+        ig_publications_number = int(message.text)
+        instagramSearch.download_top_x_publications(ig_username, ig_publications_number)
+    except:
+        bot.send_message(message.chat.id, messages.handling_ig_req_error1)
+
+
+@bot.message_handler(commands=['analyze_specific_ig_publication'])
+def analyze_specific_ig_publication(message):
+    bot.send_message(message.chat.id, messages.enter_ig_username)
+    bot.register_next_step_handler(message, reg_ig_username3)
+
+
+def reg_ig_username3(message):
+    global ig_username
+    ig_username = message.text
+    bot.send_message(message.chat.id, messages.enter_ig_specific_x)
+    bot.register_next_step_handler(message, reg_specific_publication_number)
+
+
+def reg_specific_publication_number(message):
+    global ig_username, ig_publications_number
+    try:
+        ig_publications_number = int(message.text)
+        instagramSearch.download_specific_publication(ig_username, ig_publications_number)
+    except:
+        bot.send_message(message.chat.id, messages.handling_ig_req_error1)
 
 
 @bot.message_handler(content_types=["photo"])
