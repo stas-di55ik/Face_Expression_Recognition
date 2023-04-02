@@ -9,5 +9,4 @@ def auto_translate_to_en(source_text):
 def get_sentiment_analysis(en_text):
     sentiment = SentimentIntensityAnalyzer()
     score = sentiment.polarity_scores(en_text)
-    print(score)
     return str(score)
