@@ -1,8 +1,7 @@
-from datetime import datetime
-
 import telebot
 import emotionDetection
 import os
+import shutil
 
 import markers
 import messages
@@ -14,6 +13,39 @@ ig_username = ''
 ig_publications_number = ''
 
 bot = telebot.TeleBot(config.telegram_bot_token)
+
+
+def get_ig_downloaded_source():
+    global g_ig_username
+    current_directory = os.getcwd()
+    path = os.path.join(current_directory, g_ig_username)
+    dir_list = os.listdir(path)
+    for file_name in dir_list:
+        if (".txt" in file_name) or (".jpg" in file_name):
+            shutil.move(os.path.join(path, file_name), os.path.join(current_directory, file_name))
+    shutil.rmtree(path)
+
+
+def delete_ig_downloaded_source():
+    current_directory = os.getcwd()
+    current_dir_list = os.listdir(current_directory)
+    for file_name in current_dir_list:
+        if (".txt" in file_name) or (".jpg" in file_name):
+            os.remove(file_name)
+
+
+def ig_source_handling(message):
+    for file_name in os.listdir(os.getcwd()):
+        if ".txt" in file_name:
+            text_file = open(file_name, "r")
+            text = text_file.read()
+            text_file.close()
+            bot.send_message(message.chat.id, text)
+            en_text = sentimentAnalyzer.auto_translate_to_en(text)
+            result_score = sentimentAnalyzer.get_sentiment_analysis(en_text)
+            bot.send_message(message.chat.id, result_score)
+        if ".jpg" in file_name:
+            print('MOCK: This is photo!')
 
 
 @bot.message_handler(commands=['start'])
@@ -47,6 +79,10 @@ def reg_last_publications_number(message):
     except:
         bot.send_message(message.chat.id, messages.handling_ig_req_error1)
 
+    get_ig_downloaded_source()
+    ig_source_handling(message)
+    delete_ig_downloaded_source()
+
 
 @bot.message_handler(commands=['analyze_top_x_ig_publications'])
 def analyze_top_x_ig_publications(message):
@@ -69,6 +105,10 @@ def reg_top_publications_number(message):
     except:
         bot.send_message(message.chat.id, messages.handling_ig_req_error1)
 
+    get_ig_downloaded_source()
+    ig_source_handling(message)
+    delete_ig_downloaded_source()
+
 
 @bot.message_handler(commands=['analyze_specific_ig_publication'])
 def analyze_specific_ig_publication(message):
@@ -90,6 +130,10 @@ def reg_specific_publication_number(message):
         instagramSearch.download_specific_publication(ig_username, ig_publications_number)
     except:
         bot.send_message(message.chat.id, messages.handling_ig_req_error1)
+
+    get_ig_downloaded_source()
+    ig_source_handling(message)
+    delete_ig_downloaded_source()
 
 
 @bot.message_handler(commands=['sentiment_analysis'])
