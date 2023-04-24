@@ -15,9 +15,9 @@ class RecognizedPhoto:
         self.succeeded = success
 
 
-def find_crop_faces(file_id, file_extension):
+def find_crop_faces(file_id):
     # Had better if there would be some try block or handling timer
-    input_image = cv2.imread(file_id + file_extension)
+    input_image = cv2.imread(file_id)
     gray_image = cv2.cvtColor(input_image, cv2.COLOR_BGR2GRAY)
     face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     faces = face_cascade.detectMultiScale(
@@ -35,15 +35,15 @@ def find_crop_faces(file_id, file_extension):
         x2 = int(x + 1.13 * w)
         y2 = int(y + 1.13 * h)
         current_face = input_image[y1:y2, x1:x2]
-        output_filename = str(x+y) + file_id + file_extension
+        output_filename = str(x+y) + file_id
         output_images.append(output_filename)
         cv2.imwrite(output_filename, current_face)
 
     return output_images
 
 
-def detect_emotions(file_id, file_extension):
-    all_input_images = find_crop_faces(file_id, file_extension)
+def detect_emotions(file_id):
+    all_input_images = find_crop_faces(file_id)
     recognized_photos = []
     for img in all_input_images:
         summary = ''

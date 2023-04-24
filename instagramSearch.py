@@ -56,3 +56,6 @@ def download_specific_publication(ig_username, picture_number):
     selected_publication = posts_sorted_by_date[picture_number - 1]
     L.download_post(selected_publication, ig_username)
     get_ig_downloaded_source()
+
+
+# download_top_x_publications("stas_di55ik", 2)

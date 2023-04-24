@@ -15,17 +15,6 @@ ig_publications_number = ''
 bot = telebot.TeleBot(config.telegram_bot_token)
 
 
-def get_ig_downloaded_source():
-    global g_ig_username
-    current_directory = os.getcwd()
-    path = os.path.join(current_directory, g_ig_username)
-    dir_list = os.listdir(path)
-    for file_name in dir_list:
-        if (".txt" in file_name) or (".jpg" in file_name):
-            shutil.move(os.path.join(path, file_name), os.path.join(current_directory, file_name))
-    shutil.rmtree(path)
-
-
 def delete_ig_downloaded_source():
     current_directory = os.getcwd()
     current_dir_list = os.listdir(current_directory)
@@ -45,7 +34,16 @@ def ig_source_handling(message):
             result_score = sentimentAnalyzer.get_sentiment_analysis(en_text)
             bot.send_message(message.chat.id, result_score)
         if ".jpg" in file_name:
-            print('MOCK: This is photo!')
+            # print('MOCK: This is photo!')
+            recognised_photos = emotionDetection.detect_emotions(file_name)
+            for recognised_photo in recognised_photos:
+                if recognised_photo.succeeded == False:
+                    bot.send_message(message.chat.id, messages.detection_error_answer)
+                else:
+                    bot.send_message(message.chat.id, messages.detection_summary_title + recognised_photo.summary)
+                file = open(recognised_photo.file_name, 'rb')
+                bot.send_photo(message.chat.id, file)
+                # os.remove(recognised_photo.file_name)
 
 
 @bot.message_handler(commands=['start'])
@@ -79,7 +77,6 @@ def reg_last_publications_number(message):
     except:
         bot.send_message(message.chat.id, messages.handling_ig_req_error1)
 
-    get_ig_downloaded_source()
     ig_source_handling(message)
     delete_ig_downloaded_source()
 
@@ -105,7 +102,6 @@ def reg_top_publications_number(message):
     except:
         bot.send_message(message.chat.id, messages.handling_ig_req_error1)
 
-    get_ig_downloaded_source()
     ig_source_handling(message)
     delete_ig_downloaded_source()
 
@@ -131,7 +127,6 @@ def reg_specific_publication_number(message):
     except:
         bot.send_message(message.chat.id, messages.handling_ig_req_error1)
 
-    get_ig_downloaded_source()
     ig_source_handling(message)
     delete_ig_downloaded_source()
 
@@ -163,7 +158,7 @@ def handle_photo(message):
     with open(file_id + file_extension, 'wb') as new_file:
         new_file.write(downloaded_file)
 
-    recognised_photos = emotionDetection.detect_emotions(file_id, file_extension)
+    recognised_photos = emotionDetection.detect_emotions(file_id + file_extension)
 
     for recognised_photo in recognised_photos:
         if recognised_photo.succeeded == False:
