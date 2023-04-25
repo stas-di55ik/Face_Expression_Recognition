@@ -34,16 +34,17 @@ def ig_source_handling(message):
             result_score = sentimentAnalyzer.get_sentiment_analysis(en_text)
             bot.send_message(message.chat.id, result_score)
         if ".jpg" in file_name:
-            # print('MOCK: This is photo!')
             recognised_photos = emotionDetection.detect_emotions(file_name)
-            for recognised_photo in recognised_photos:
-                if recognised_photo.succeeded == False:
-                    bot.send_message(message.chat.id, messages.detection_error_answer)
-                else:
-                    bot.send_message(message.chat.id, messages.detection_summary_title + recognised_photo.summary)
-                file = open(recognised_photo.file_name, 'rb')
-                bot.send_photo(message.chat.id, file)
-                # os.remove(recognised_photo.file_name)
+            if recognised_photos == 'Error':
+                bot.send_message(message.chat.id, messages.detection_error_answer)
+            else:
+                for recognised_photo in recognised_photos:
+                    if recognised_photo.succeeded == False:
+                        bot.send_message(message.chat.id, messages.detection_error_answer)
+                    else:
+                        bot.send_message(message.chat.id, messages.detection_summary_title + recognised_photo.summary)
+                    file = open(recognised_photo.file_name, 'rb')
+                    bot.send_photo(message.chat.id, file)
 
 
 @bot.message_handler(commands=['start'])
@@ -159,17 +160,18 @@ def handle_photo(message):
         new_file.write(downloaded_file)
 
     recognised_photos = emotionDetection.detect_emotions(file_id + file_extension)
+    if recognised_photos == 'Error':
+        bot.send_message(message.chat.id, messages.detection_error_answer)
+    else:
+        for recognised_photo in recognised_photos:
+            if recognised_photo.succeeded == False:
+                bot.send_message(message.chat.id, messages.detection_error_answer)
+            else:
+                bot.send_message(message.chat.id, messages.detection_summary_title + recognised_photo.summary)
+            file = open(recognised_photo.file_name, 'rb')
+            bot.send_photo(message.chat.id, file)
+        delete_ig_downloaded_source()
 
-    for recognised_photo in recognised_photos:
-        if recognised_photo.succeeded == False:
-            bot.send_message(message.chat.id, messages.detection_error_answer)
-        else:
-            bot.send_message(message.chat.id, messages.detection_summary_title + recognised_photo.summary)
-        file = open(recognised_photo.file_name, 'rb')
-        bot.send_photo(message.chat.id, file)
-
-        os.remove(recognised_photo.file_name)
-    os.remove(file_id + file_extension)
 
 
 @bot.message_handler(content_types=["document", "audio", "sticker", "video", "location", "contact"])
