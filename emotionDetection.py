@@ -84,4 +84,4 @@ def detect_emotions(file_id):
         return recognized_photos
 
 
-find_crop_faces('AgACAgIAAxkBAAIGvWRIOtEhbRZ4Jgjroq6dSGTjdZTWAAK2zjEbV8NASnfVk9ZN6s3rAQADAgADeAADLwQ.jpg')
+# find_crop_faces('AgACAgIAAxkBAAIGvWRIOtEhbRZ4Jgjroq6dSGTjdZTWAAK2zjEbV8NASnfVk9ZN6s3rAQADAgADeAADLwQ.jpg')
