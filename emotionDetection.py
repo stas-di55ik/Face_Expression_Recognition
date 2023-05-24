@@ -16,7 +16,6 @@ class RecognizedPhoto:
 
 
 def find_crop_faces(file_id):
-    # Had better if there would be some try block or handling timer
     try:
         input_image = cv2.imread(file_id)
         gray_image = cv2.cvtColor(input_image, cv2.COLOR_BGR2GRAY)
