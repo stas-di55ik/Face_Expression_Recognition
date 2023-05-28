@@ -1,9 +1,7 @@
 import telebot
 import emotionDetection
 import os
-import shutil
 
-import markers
 import messages
 import config
 import instagramSearch

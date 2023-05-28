@@ -1,38 +1,36 @@
-start_answer = "Привiт ✌️ Надішлшть мені, будь ласка, фото - і я розпізнаю емоції на ньому)"
+start_answer = "Hi ✌️ Please send me a photo and I will recognize the emotions in it)"
 
-help_answer = "Привiт ✌️ Я, бот🦾🤖, що був створений для розпізнавання емоцій на фото\n✍️Вимоги до використання:\n✅ " \
-             "Надсилайте лише стиснені фото та посилання на публікації публічних інстаграм-акаунтів" \
-              "\n✅ Надсилайте фото, на якому є лише одне обличчя, " \
-             "інакше емоції на другому не будуть розпізнені\n"
+help_answer = "Hi ✌️ I am a bot🦾🤖 that was created to recognize emotions in photos, text and IG publications\n" \
+              "✍️Requirements for use:\n✅ " \
+             "Send only compressed photos with one or more faces and text in any language" \
+              "\n✅ To analyze Instagram posts, use the appropriate bot commands. " \
+              "Only public accounts are subject to analysis\n"
 
-photo_handling_status = "⚙️Триває розпізнавання..."
+photo_handling_status = "⚙️️Recognition continues..."
 
-detection_error_answer = "Вибачте за незручності, дане фото не підлягає аналізу🥲 У разі необхідності спробуйте " \
-                         "самойстійно обрізати фото та повторно надійшліть його️✌️"
+detection_error_answer = "Sorry for the inconvenience, this photo cannot be analyzed🥲 If necessary, " \
+                         "try to crop the photo yourself and resend it️✌️"
 
-detection_summary_title = "🌟 Підсумок аналізу фото 🫡\n"
+detection_summary_title = "🌟 The result of the photo analysis 🫡\n"
 
-documents_handling_answer = "На жаль, я можу працювати лише з фото😌"
+documents_handling_answer = "Unfortunately, I can only work with photos and text😌"
 
-photo_searching_status = "🔍 Знаходимо фото..."
+photo_searching_status = "🔍 Finding a photo..."
 
-detection_searching_error_answer = "Вибачте за незручності, дане фото чи посилання не підлягає аналізу🥲"
+text_handling_answer = "Please send a photo for analysis😊"
 
-text_handling_answer = "Надішліть, будь ласка, фото для аналізу😊"
+enter_ig_username = "Enter the name of the user profile"
 
-enter_ig_username = "Введіть назву профілю кристувача"
+enter_ig_top_x = "Enter the number of top liked publications to analyze"
 
-enter_ig_top_x = "Введіть кількість найркащих публікацій для аналізу"
+enter_ig_specific_x = "Enter the publication number to analyze"
 
-enter_ig_specific_x = "Введіть номер публікації для аналізу"
+enter_ig_last_x = "Enter the number of last publications to analyze"
 
-enter_ig_last_x = "Введіть кількість останніх публікацій для аналізу"
+handling_ig_req_error1 = "An error occurred while making a request! Please make sure that the profile you sent" \
+                         " in the request exists and is public\n- The number of publications is correct"
 
-handling_ig_req_error1 = "Виникла помилка під час здійснення запиту! Переконайтеся, що\n" \
-    "- Надісланмй у запиті профіль існує та є відкритим\n" \
-    "- Кількість останніх публікацій вказана правильно"
+enter_sentiment_analysis_source = "Enter text for sentiment analysis"
 
-enter_sentiment_analysis_source = "Введіть текст для сентимент-аналізу"
-
-sentiment_analysis_error = "Виникла помилка під час перекладу англійською або сентимент-аналізу. Переконайтеся, що" \
-    "дані введено коректно!"
+sentiment_analysis_error = "An error occurred during English translation or sentiment analysis. " \
+                           "Please make sure that you entered the data correctly!"
